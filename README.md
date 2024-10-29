@@ -4,10 +4,6 @@ Add `/Frontend/Help/` to the base url.
 
 ## installation
 
-using uv:
-
-uv add acadrepy --git https://github.com/BorholmsRegionsKommuneIT/acadrepy
-
 Declare a dependency and it's source in `pyproject.toml` if it is not already there:
 
 ```toml
@@ -19,6 +15,8 @@ dependencies = [
 [tool.uv.sources]
 acadrepy = { git = "https://github.com/BorholmsRegionsKommuneIT/acadrepy" }
 ```
+
+then sync with `uv sync`
 
 ## usage
 
