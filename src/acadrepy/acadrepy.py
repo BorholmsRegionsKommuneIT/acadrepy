@@ -12,7 +12,7 @@ class AcadreClient:
 
         requests.packages.urllib3.disable_warnings()
 
-    def get_authentication_url(self):
+    def _get_authentication_url(self):
         """
         Get the initial authentication URL from the Acadre API.
         """
@@ -29,7 +29,7 @@ class AcadreClient:
         """
         Authenticate using the authentication URL obtained from get_authentication_url.
         """
-        auth_url = self.get_authentication_url()
+        auth_url = self._get_authentication_url()
         response = self.session.get(
             auth_url, auth=HttpNtlmAuth(self.username, self.password), verify=False
         )  # Use NTLM authentication
@@ -77,3 +77,24 @@ class AcadreClient:
             raise Exception(
                 f"Failed to download document. Status Code: {response.status_code}"
             )
+    def post_temporary_storage(self, file_path):
+        """
+        Posts a file to Temorary storage, which in turn is used for creating a main document. (Returns a URI link to the uploaded file within acadre)
+        """
+        # Open file with read-binary mode
+        with open(file_path, "rb") as file:
+            # Define the files parameter for the request
+            files = {"file": file}
+
+            # Send the POST request
+            url = f"{self.base_url}/Frontend/api/v12/storage"
+            headers = {"Accept": "application/json"}
+            response = self.session.post(
+                url, headers=headers, verify=False, files=files
+            )  # Disable SSL verification
+            if response.status_code == 200:
+                return response.json()
+            else:
+                raise Exception(
+                    f"Failed to get documents by search term. Status Code: {response.status_code}"
+                )
